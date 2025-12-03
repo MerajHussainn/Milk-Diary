@@ -110,33 +110,33 @@ export default function ChatApp({
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0f0425] text-white">
+    <div className="w-full h-full flex flex-col bg-mint-400 text-white">
       {/* Messages */}
       <div
         ref={messagesContainerRef}
         className="flex-1 overflow-auto p-4 space-y-4"
       >
         {currentMessages.length === 0 && !loading && (
-          <div className="text-center text-gray-400 py-6">
+          <div className="text-center text-white-400 py-6">
             <img src="/careerist_logo.png" alt="Logo" className="mx-auto mb-4 w-20 h-20" />
             <div className="text-lg font-semibold mb-2">Your Buddy for Career Growth 🚀</div>
-            <div className="text-sm text-pink-400 font-medium">Powered by Gemini 2.5-Flash</div>
+            <div className="text-sm text-white-400 font-medium">Powered by Gemini 2.5-Flash</div>
             <div className="mt-6 grid gap-3 max-w-md mx-auto">
               <button
                 onClick={() => sendMessage(null, "What are the key skills for an AI Engineer?")}
-                className="bg-[#1a103d] hover:bg-gradient-to-r hover:from-indigo-500 hover:to-pink-500 p-3 rounded-xl"
+                className="bg-green-500 hover:bg-gradient-to-r hover:from-lime-500 hover:to-yellow-400 p-3 rounded-xl"
               >
                 What are the key skills for an AI Engineer?
               </button>
               <button
                 onClick={() => sendMessage(null, "How can I prepare for a software engineering interview?")}
-                className="bg-[#1a103d] hover:bg-gradient-to-r hover:from-indigo-500 hover:to-pink-500 p-3 rounded-xl"
+                className="bg-green-500 hover:bg-gradient-to-r hover:from-lime-500 hover:to-yellow-500 p-3 rounded-xl"
               >
                 How can I prepare for a software engineering interview?
               </button>
               <button
                 onClick={() => sendMessage(null, "Provide a detailed roadmap for a successful entrepreneur.")}
-                className="bg-[#1a103d] hover:bg-gradient-to-r hover:from-indigo-500 hover:to-pink-500 p-3 rounded-xl"
+                className="bg-green-500 hover:bg-gradient-to-r hover:from-lime-500 hover:to-yellow-400 p-3 rounded-xl"
               >
                 Provide a detailed roadmap for a successful entrepreneur.
               </button>
@@ -149,8 +149,8 @@ export default function ChatApp({
             <div
               className={`max-w-[75%] px-4 py-3 rounded-2xl ${
                 m.role === "human"
-                  ? "bg-gradient-to-r from-indigo-500 to-pink-500 text-white rounded-br-none"
-                  : "bg-[#1a103d] text-gray-200 rounded-bl-none"
+                  ? "bg-gradient-to-r from-lime-500 to-yellow-400 text-white rounded-br-none"
+                  : "bg-lime-400 text-gray-200 rounded-bl-none"
               }`}
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
@@ -163,7 +163,7 @@ export default function ChatApp({
         {loading && (
           <div className="flex justify-start text-gray-400">
             <div className="px-4 py-2 flex items-center gap-2">
-              <div className="animate-spin h-5 w-5 border-2 border-pink-500 border-t-transparent rounded-full"></div>
+              <div className="animate-spin h-5 w-5 border-2 border-lime-500 border-t-transparent rounded-full"></div>
               <span>{loadingPhrase}</span>
             </div>
           </div>
@@ -173,20 +173,20 @@ export default function ChatApp({
       {/* Input */}
       <form
         onSubmit={sendMessage}
-        className="p-3 border-t border-pink-500/30 flex items-center gap-2 bg-[#1a103d]"
+        className="p-3 border-t border-lime-400/30 flex items-center gap-2 bg-green-500]"
       >
         <textarea
           ref={textareaRef}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={loading ? loadingPhrase : "Type your question..."}
-          className="flex-1 px-3 py-2 rounded-lg bg-[#0f0425] border border-pink-500/30 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white resize-none"
+          className="flex-1 px-3 py-2 rounded-lg bg-green-500 border border-lime-500/30 focus:outline-none focus:ring-2 focus:ring-lime-500 text-white resize-none"
           rows={1}
         />
         <button
           type="submit"
           disabled={loading || !query.trim()}
-          className="px-5 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold hover:scale-105 transition disabled:opacity-50"
+          className="px-5 py-2 rounded-lg bg-gradient-to-r from-lime-400 to-yellow-400 text-white-500 font-semibold hover:scale-105 transition disabled:opacity-50"
         >
           {loading ? "..." : "Send"}
         </button>

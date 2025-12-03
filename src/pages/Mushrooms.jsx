@@ -154,7 +154,7 @@ const HeroSection = () => (
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.5 }}
       >
-        Discover Nature's Finest Fungi
+        Discover Nature's Finest Diary Products
       </motion.h1>
       <motion.p
         className="text-lg md:text-xl text-white mt-2 drop-shadow"
@@ -162,7 +162,7 @@ const HeroSection = () => (
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.7 }}
       >
-        Fresh, Organic, and Delivered to Your Door
+        Fresh, Natural Diary products, and Delivered to Your Door
       </motion.p>
     </div>
   </motion.div>
