@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -32,30 +30,30 @@ import {
 import { Toaster, toast } from "react-hot-toast";
 
 // --- IMAGE IMPORTS ---
-import heroImage from "../assets/hero.webp";
-import patnaEventImg from "../assets/mushrooms/Img1.png";
-import delhiEventImg from "../assets/mushrooms/Img2.png";
-import mumbaiEventImg from "../assets/mushrooms/Img3.png";
-import bengaluruEventImg from "../assets/mushrooms/Img4.png";
-import kolkataEventImg from "../assets/mushrooms/Img5.png";
-import chennaiEventImg from "../assets/mushrooms/Img6.png";
+import EventHero from "../assets/dairy/EventHero.jpg";
+import patnaEvent from "../assets/dairy/PatnaEvent.jpg";
+import cheese from "../assets/dairy/cheese.jpg";
+import Milkfestival  from "../assets/dairy/MilkFestival.jpeg";
+import butter from "../assets/dairy/butter.jpg";
+import cowghee from "../assets/dairy/cowghee.jpg";
+import curd from "../assets/dairy/curd.jpg"
 
-// Dummy gallery images
-import img1 from "../assets/mushrooms/Img1.png";
-import img2 from "../assets/mushrooms/Img2.png";
-import img3 from "../assets/mushrooms/Img3.png";
-import img4 from "../assets/mushrooms/Img4.png";
-import img5 from "../assets/mushrooms/Img5.png";
-import img6 from "../assets/mushrooms/Img6.png";
+// Dummy gallery images (dairy-themed)
+import img1 from "../assets/dairy/PatnaEvent.jpg";
+import img2 from "../assets/dairy/cheese.jpg";
+import img3 from "../assets/dairy/MilkFestival.jpeg";
+import img4 from "../assets/dairy/butter.jpg";
+import img5 from "../assets/dairy//cowghee.jpg"
+import img6 from "../assets/dairy/curd.jpg";
 
 // --- BACKEND API CONFIG ---
 const API_ENDPOINTS = {
-  GET_EVENTS: "https://your-backend-api.com/api/events",
-  REGISTER_EVENT: "https://your-backend-api.com/api/events/register",
-  GET_EVENT_DETAILS: "https://your-backend-api.com/api/events/",
-  UPLOAD_PHOTO: "https://your-backend-api.com/api/events/upload-photo",
-  GET_GALLERY: "https://your-backend-api.com/api/gallery",
-  CONTACT_ORGANIZER: "https://your-backend-api.com/api/contact-organizer",
+  GET_EVENTS: "https://your-backend-api.com/api/events ",
+  REGISTER_EVENT: "https://your-backend-api.com/api/events/register ",
+  GET_EVENT_DETAILS: "https://your-backend-api.com/api/events/ ",
+  UPLOAD_PHOTO: "https://your-backend-api.com/api/events/upload-photo ",
+  GET_GALLERY: "https://your-backend-api.com/api/gallery ",
+  CONTACT_ORGANIZER: "https://your-backend-api.com/api/contact-organizer ",
 };
 
 // --- BACKEND SERVICE ---
@@ -100,19 +98,19 @@ class EventService {
   }
 }
 
-// --- INITIAL DATA (Fallback) ---
+// --- INITIAL DATA (Updated for Dairy Events) ---
 const initialEventsData = [
   {
     id: 1,
-    slug: "patna-mushroom-fair-2025",
+    slug: "patna-dairy-expo-2025",
     status: "upcoming",
-    name: "Patna Mushroom Fair 2025",
+    name: "Patna Dairy Expo 2025",
     location: "Gyan Bhawan, Patna, Bihar",
     date: "October 25-26, 2025",
     time: "10:00 AM - 8:00 PM",
-    description: "Join us for the largest mushroom fair in Bihar! Discover rare species, attend cultivation seminars by leading experts, and taste gourmet mushroom dishes from local chefs.",
-    longDescription: "The Patna Mushroom Fair is back bigger and better! This year we feature over 50 exhibitors showcasing exotic mushroom varieties, live cooking demonstrations by celebrity chefs, cultivation workshops for beginners and experts, and a special kids zone with fun fungal activities.",
-    image: patnaEventImg,
+    description: "Join us for the largest dairy exhibition in Bihar! Discover modern milk processing techniques, attend cheese making workshops, and taste artisan dairy products from local producers.",
+    longDescription: "The Patna Dairy Expo is back bigger and better! This year we feature over 50 exhibitors showcasing advanced dairy equipment, live cheese making demonstrations by celebrity chefs, milk quality assessment workshops, and a special kids zone with fun dairy education activities.",
+    image: patnaEvent,
     featured: true,
     category: "fair",
     price: "Free",
@@ -120,135 +118,135 @@ const initialEventsData = [
     registered: 342,
     rating: 4.8,
     speakers: ["Dr. Rajesh Verma", "Chef Priya Sharma", "Prof. Arun Kumar"],
-    gallery: [img1, img2, img3, img4, img5, img6],
+    // gallery: [img1, img2, img3, img4, img5, img6],
     highlights: [
-      "Live cooking demos",
-      "Mushroom cultivation workshops",
-      "Rare species exhibition",
-      "Kids activity zone",
+      "Live cheese making demos",
+      "Milk quality workshops",
+      "Modern dairy equipment showcase",
+      "Kids dairy education zone",
       "Farmer meetup"
     ],
     contact: {
       phone: "+91-9876543210",
-      email: "patnafair@mushroommart.com",
-      organizer: "MushroomMart Events Team"
+      email: "patnaexpo@dairymart.com",
+      organizer: "DairyMart Events Team"
     }
   },
   {
     id: 2,
-    slug: "monsoon-foraging-trip",
+    slug: "artisan-cheese-workshop",
     status: "upcoming",
-    name: "Monsoon Mushroom Foraging Trip",
+    name: "Artisan Cheese Making Workshop",
     location: "Lonavala, Maharashtra",
     date: "November 15, 2025",
     time: "7:00 AM - 4:00 PM",
-    description: "Embark on a guided foraging adventure in the lush hills of Lonavala. Learn to identify wild, edible mushrooms with our expert mycologists.",
-    longDescription: "Experience the thrill of mushroom foraging in the beautiful monsoon forests of Lonavala. Our expert guides will teach you identification techniques, sustainable harvesting practices, and traditional uses of wild mushrooms. Includes lunch and transportation from Pune.",
-    image: img2,
+    description: "Learn the art of making gourmet cheeses! Hands-on workshop covering cheddar, mozzarella, feta and more with expert cheesemakers.",
+    longDescription: "Experience the art and science of cheese making in the beautiful hills of Lonavala. Our expert instructors will teach you traditional techniques, culture selection, aging processes, and flavor development. Includes lunch and all materials.",
+    image: cheese,
     featured: false,
-    category: "outing",
+    category: "workshop",
     price: "₹2,499",
     capacity: 25,
     registered: 18,
     rating: 4.9,
-    gallery: [img2, img3, img4],
+    // gallery: [img2, img3, img4],
     highlights: [
-      "Expert guided tour",
-      "Identification training",
-      "Sustainable harvesting",
+      "Expert instruction",
+      "Hands-on cheese making",
+      "Take home your creations",
       "Lunch included",
-      "Transport from Pune"
+      "Certificate provided"
     ]
   },
   {
     id: 3,
-    slug: "gourmet-festival-mumbai",
+    slug: "mumbai-milk-festival",
     status: "past",
-    name: "Gourmet Mushroom Festival",
+    name: "Mumbai Milk Festival",
     location: "Jio World Centre, Mumbai",
     date: "August 15-16, 2025",
     time: "11:00 AM - 9:00 PM",
-    description: "Our Mumbai festival was a massive success, celebrating the culinary versatility of mushrooms with live cooking demos and tasting stalls.",
-    longDescription: "The Gourmet Mushroom Festival brought together food enthusiasts, chefs, and mushroom lovers for a weekend of culinary exploration. Featuring cooking competitions, tasting sessions, and expert talks on mushroom gastronomy.",
-    image: mumbaiEventImg,
+    description: "Celebrating the versatility of milk with live demonstrations, tasting sessions, and educational exhibits about dairy nutrition.",
+    longDescription: "The Mumbai Milk Festival brought together food enthusiasts, nutritionists, and dairy lovers for a weekend of milky delights. Featuring milkshake competitions, paneer making sessions, and expert talks on dairy nutrition.",
+    image: Milkfestival,
     featured: false,
     category: "festival",
     price: "₹499",
     capacity: 1000,
     registered: 856,
     rating: 4.7,
-    gallery: [img1, img2, img3, img4, img5, img6],
+    // gallery: [img1, img2, img3, img4, img5, img6],
     highlights: [
-      "Cooking competitions",
-      "Tasting sessions",
-      "Chef demonstrations",
-      "Wine pairing",
+      "Milkshake competitions",
+      "Paneer making sessions",
+      "Nutrition seminars",
+      "Kids activities",
       "Live music"
     ]
   },
   {
     id: 4,
-    slug: "delhi-cultivation-workshop",
+    slug: "delhi-butter-making-workshop",
     status: "past",
-    name: "Mushroom Cultivation Workshop",
+    name: "Traditional Butter Making Workshop",
     location: "India Habitat Centre, New Delhi",
     date: "June 20-21, 2025",
     time: "9:00 AM - 5:00 PM",
-    description: "Hands-on workshop where attendees learned the A-Z of setting up their own home mushroom farms.",
-    longDescription: "A comprehensive 2-day workshop covering everything from substrate preparation to harvesting techniques. Participants received starter kits and lifetime access to our cultivation support group.",
-    image: delhiEventImg,
+    description: "Learn traditional butter making techniques, from cream separation to churning and flavoring artisan butters.",
+    longDescription: "A comprehensive 2-day workshop covering everything from cream selection to final butter packaging. Participants learned cultured butter, ghee making, and flavored butter creations with take-home samples.",
+    image: butter,
     featured: false,
     category: "workshop",
     price: "₹3,999",
     capacity: 50,
     registered: 50,
     rating: 4.9,
-    gallery: [img4, img5, img6, img1, img2, img3],
+    // gallery: [img4, img5, img6, img1, img2, img3],
     highlights: [
-      "Practical training",
-      "Starter kit included",
+      "Traditional techniques",
+      "Take-home samples",
+      "Ghee making included",
       "Expert guidance",
-      "Networking",
-      "Ongoing support"
+      "Recipe booklet"
     ]
   },
   {
     id: 5,
-    slug: "bengaluru-food-fest",
+    slug: "bengaluru-yogurt-festival",
     status: "upcoming",
-    name: "Bengaluru Mushroom Food Festival",
+    name: "Bengaluru Yogurt & Probiotics Festival",
     location: "UB City, Bengaluru",
     date: "December 5-7, 2025",
     time: "12:00 PM - 10:00 PM",
-    description: "A culinary extravaganza featuring mushroom dishes from around the world.",
-    image: bengaluruEventImg,
+    description: "A celebration of yogurt, probiotics, and fermented dairy products from around the world.",
+    image: cowghee,
     category: "festival",
     price: "₹299",
     capacity: 800,
     registered: 213,
     rating: 4.5,
-    gallery: [img3, img4, img5]
+    // gallery: [img3, img4, img5]
   },
   {
     id: 6,
-    slug: "kolkata-farmer-meet",
+    slug: "kolkata-dairy-tech-meet",
     status: "upcoming",
-    name: "Kolkata Mushroom Farmers Meet",
+    name: "Kolkata Dairy Technology Summit",
     location: "Science City, Kolkata",
     date: "November 30, 2025",
     time: "9:00 AM - 6:00 PM",
-    description: "Annual gathering of mushroom farmers and industry experts.",
-    image: kolkataEventImg,
+    description: "Annual gathering of dairy technologists and industry experts showcasing latest innovations.",
+    image: curd,
     category: "conference",
     price: "Free",
     capacity: 300,
     registered: 187,
     rating: 4.6,
-    gallery: [img5, img6, img1]
+    // gallery: [img5, img6, img1]
   }
 ];
 
-// --- HERO SECTION with Countdown ---
+// --- HERO SECTION with Countdown (Updated for Dairy) ---
 const HeroSection = () => {
   const [nextEvent, setNextEvent] = useState(null);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
@@ -278,8 +276,8 @@ const HeroSection = () => {
   return (
     <motion.div className="relative w-full h-[70vh] md:h-[80vh] flex items-center justify-center overflow-hidden">
       <motion.img
-        src={heroImage}
-        alt="Mushroom Events Banner"
+        src={EventHero}
+        alt="Dairy Events Banner"
         className="absolute inset-0 w-full h-full object-cover"
         initial={{ scale: 1.2, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -294,7 +292,7 @@ const HeroSection = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
-          Mushroom Community Events
+          Dairy Community Events
         </motion.h1>
         <motion.p
           className="text-xl md:text-2xl text-green-300 font-medium mb-8 drop-shadow-lg"
@@ -302,7 +300,7 @@ const HeroSection = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          Join, Learn, and Celebrate with Fungi Enthusiasts
+          Join, Learn, and Celebrate with Dairy Enthusiasts
         </motion.p>
 
         {/* Countdown Timer */}
@@ -344,7 +342,7 @@ const HeroSection = () => {
   );
 };
 
-// --- EVENT FILTER BAR ---
+// --- EVENT FILTER BAR (No changes needed) ---
 const EventFilterBar = ({ activeFilter, setActiveFilter, searchQuery, setSearchQuery }) => {
   const filters = [
     { id: "all", label: "All Events" },
@@ -396,7 +394,7 @@ const EventFilterBar = ({ activeFilter, setActiveFilter, searchQuery, setSearchQ
   );
 };
 
-// --- EVENT STATS CARD ---
+// --- EVENT STATS CARD (No changes needed) ---
 const EventStats = ({ event }) => (
   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
     <div className="bg-green-50 p-4 rounded-xl">
@@ -435,7 +433,7 @@ const EventStats = ({ event }) => (
   </div>
 );
 
-// --- ENHANCED EVENT MODAL ---
+// --- ENHANCED EVENT MODAL (No structural changes, only content updates) ---
 const EventModal = ({ event, onClose }) => {
   const [activeTab, setActiveTab] = useState("details");
   const [registrationData, setRegistrationData] = useState({
@@ -463,7 +461,7 @@ const EventModal = ({ event, onClose }) => {
     if (navigator.share) {
       navigator.share({
         title: event.name,
-        text: `Check out this event: ${event.name}`,
+        text: `Check out this dairy event: ${event.name}`,
         url: window.location.href,
       });
     } else {
@@ -695,14 +693,14 @@ const EventModal = ({ event, onClose }) => {
                     <Mail className="text-green-600" />
                     <div>
                       <p className="font-bold">Email</p>
-                      <p className="text-gray-600">{event.contact?.email || "events@mushroommart.com"}</p>
+                      <p className="text-gray-600">{event.contact?.email || "events@dairymart.com"}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Users className="text-green-600" />
                     <div>
                       <p className="font-bold">Organizer</p>
-                      <p className="text-gray-600">{event.contact?.organizer || "MushroomMart Events Team"}</p>
+                      <p className="text-gray-600">{event.contact?.organizer || "DairyMart Events Team"}</p>
                     </div>
                   </div>
                 </div>
@@ -724,7 +722,7 @@ const EventModal = ({ event, onClose }) => {
   );
 };
 
-// --- EVENT CARD COMPONENT ---
+// --- EVENT CARD COMPONENT (No structural changes) ---
 const EventCard = ({ event, onClick }) => (
   <motion.div
     whileHover={{ y: -5 }}
@@ -788,7 +786,7 @@ const EventCard = ({ event, onClick }) => (
   </motion.div>
 );
 
-// --- MAIN EVENTS PAGE ---
+// --- MAIN EVENTS PAGE (Only updated text content) ---
 export default function EventsPage() {
   const [events, setEvents] = useState(initialEventsData);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -993,11 +991,11 @@ export default function EventsPage() {
           className="mt-16 text-center"
         >
           <h3 className="text-3xl font-bold text-gray-900 mb-6">
-            Want to Organize an Event?
+            Want to Organize a Dairy Event?
           </h3>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Partner with us to host mushroom-related events, workshops, or festivals.
-            Reach thousands of fungi enthusiasts.
+            Partner with us to host dairy-related events, workshops, or festivals.
+            Reach thousands of dairy enthusiasts and industry professionals.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="bg-green-600 text-white px-8 py-3 rounded-full font-bold hover:bg-green-700 transition-colors">
@@ -1013,4 +1011,4 @@ export default function EventsPage() {
       </main>
     </div>
   );
-}
+} 

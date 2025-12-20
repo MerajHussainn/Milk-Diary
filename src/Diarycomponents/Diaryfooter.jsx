@@ -21,11 +21,11 @@ export default function Footer() {
         {/* Brand & Mission */}
         <div className="flex flex-col gap-4">
           <h2 className="text-3xl font-extrabold bg-gradient-to-r from-[#95e500] via-[#f3cc00] to-white bg-clip-text text-transparent">
-            UrbanFungi
+            Shusila Upvan
           </h2>
           <p className="text-gray-700 text-sm leading-relaxed">
-            🍄 Fresh, organic, and exotic mushrooms delivered with care.
-            Supporting farmers and bringing nature’s goodness to your plate.
+          🥛 Fresh exotic Milk Diary products delivered with care.
+            Supporting Diary and bringing nature’s goodness to your Cup and Glasses.
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export default function Footer() {
                 className="flex items-center gap-2 hover:text-[#f3cc00] transition-colors"
               >
                 <ShoppingBasket size={16} className="text-[#f3cc00]" />
-                <span>Mushrooms</span>
+                <span>Milk Diary</span>
               </a>
             </li>
             <li>
@@ -66,7 +66,7 @@ export default function Footer() {
                 className="flex items-center gap-2 hover:text-[#f3cc00] transition-colors"
               >
                 <Sprout size={16} className="text-[#95e500]" />
-                <span>Farmer Support</span>
+                <span>Diary produts Support</span>
               </a>
             </li>
             <li>
@@ -93,7 +93,7 @@ export default function Footer() {
                 href="mailto:info@UrbanFungi.com"
                 className="hover:text-[#f3cc00] transition-colors"
               >
-                info@Urbanfungi.com
+                info@shusilaupvan.com
               </a>
             </li>
             <li className="flex items-center gap-2">
@@ -104,7 +104,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-[#f3cc00] transition-colors"
               >
-                @Urbanfungi
+                @shusilaupvan
               </a>
             </li>
             <li className="flex items-center gap-2">
@@ -115,7 +115,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-[#f3cc00] transition-colors"
               >
-                UrbanFungi
+                shusilaupvan
               </a>
             </li>
             <li className="flex items-center gap-2">
@@ -126,7 +126,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-[#f3cc00] transition-colors"
               >
-                @UrbanFungi
+                @shusilaupvan
               </a>
             </li>
           </ul>
@@ -138,7 +138,7 @@ export default function Footer() {
 
       {/* Bottom Section */}
       <div className="w-full text-center text-gray-600 text-sm py-6">
-        &copy; {new Date().getFullYear()} UrbanFungi. All rights reserved.
+        &copy; {new Date().getFullYear()} shusilaupvan. All rights reserved.
       </div>
     </footer>
   );
