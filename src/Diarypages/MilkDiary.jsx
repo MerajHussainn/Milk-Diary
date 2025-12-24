@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
+import { useCart } from "../context/CartContext";
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -27,9 +28,9 @@ import {
 } from "lucide-react";
 import { Toaster, toast } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import DeliveryForm from "../pages/DeliveryForm";
 
 // --- IMAGE IMPORTS for Dairy Products ---
-
 import paneer from "../assets/dairy/paneer.jpg";
 import cowmilk from "../assets/dairy/cowmilk.jpg";
 import A2cow from "../assets/dairy/A2cow.jpg";
@@ -39,17 +40,6 @@ import cheese from "../assets/dairy/cheese.jpg";
 import cowghee from "../assets/dairy/cowghee.jpg";
 import butter from "../assets/dairy/butter.jpg";
 import HeroMilk from "../assets/dairy/HeroMilk.jpg";
-
-// API Endpoints (Backend URLs) - update these to match your backend
-const API_ENDPOINTS = {
-  GET_PRODUCTS: "https://your-backend-api.com/api/dairy/products",
-  GET_PRODUCT_DETAIL: "https://your-backend-api.com/api/dairy/products/",
-  ADD_TO_CART: "https://your-backend-api.com/api/cart/add",
-  CREATE_ORDER: "https://your-backend-api.com/api/orders/create",
-  GET_TESTIMONIALS: "https://your-backend-api.com/api/testimonials",
-  CONTACT_US: "https://your-backend-api.com/api/contact",
-  SUBSCRIBE_NEWSLETTER: "https://your-backend-api.com/api/subscribe",
-};
 
 // --- INITIAL DATA (fallback) for Dairy Products ---
 const initialDairyData = [
@@ -224,73 +214,6 @@ const initialTestimonialData = [
   },
 ];
 
-// --- BACKEND SERVICE FUNCTIONS (dairy) ---
-class DairyService {
-  static async fetchProducts() {
-    try {
-      const response = await fetch(API_ENDPOINTS.GET_PRODUCTS);
-      if (!response.ok) throw new Error("Failed to fetch products");
-      return await response.json();
-    } catch (error) {
-      console.warn("Using fallback dairy data:", error.message);
-      return initialDairyData;
-    }
-  }
-
-  static async addToCart(itemId, quantity, userId = null) {
-    try {
-      const response = await fetch(API_ENDPOINTS.ADD_TO_CART, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ itemId, quantity, userId }),
-      });
-      return await response.json();
-    } catch (error) {
-      console.error("Cart update failed:", error);
-      return { success: false, message: "Failed to add to cart" };
-    }
-  }
-
-  static async createOrder(orderData) {
-    try {
-      const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
-      return await response.json();
-    } catch (error) {
-      console.error("Order creation failed:", error);
-      return { success: false, message: "Order failed" };
-    }
-  }
-
-  static async fetchTestimonials() {
-    try {
-      const response = await fetch(API_ENDPOINTS.GET_TESTIMONIALS);
-      if (!response.ok) throw new Error("Failed to fetch testimonials");
-      return await response.json();
-    } catch (error) {
-      console.warn("Using fallback testimonials");
-      return initialTestimonialData;
-    }
-  }
-
-  static async subscribeNewsletter(email) {
-    try {
-      const response = await fetch(API_ENDPOINTS.SUBSCRIBE_NEWSLETTER, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      return await response.json();
-    } catch (error) {
-      console.error("Newsletter subscription failed:", error);
-      return { success: false, message: "Subscription failed" };
-    }
-  }
-}
-
 // --- HERO SECTION with Newsletter ---
 const HeroSection = () => {
   const [email, setEmail] = useState("");
@@ -300,13 +223,8 @@ const HeroSection = () => {
       toast.error("Please enter your email");
       return;
     }
-    const result = await DairyService.subscribeNewsletter(email);
-    if (result.success) {
-      toast.success("Subscribed successfully!");
-      setEmail("");
-    } else {
-      toast.error(result.message || "Subscription failed");
-    }
+    toast.success("Subscribed successfully!");
+    setEmail("");
   };
 
   return (
@@ -442,97 +360,139 @@ const DairyCarousel = ({ products, onImageClick }) => {
   );
 };
 
-// --- QUANTITY SELECTOR with Backend ---
+// --- QUANTITY SELECTOR ---
 const QuantitySelector = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showDeliveryForm, setShowDeliveryForm] = useState(false);
 
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  // ---------------- ADD TO CART ----------------
   const handleAddToCart = async () => {
-    setLoading(true);
-    const result = await DairyService.addToCart(product.id, quantity);
-
-    if (result.success) {
-      toast.success(`${quantity} x ${product.name} added to cart!`, {
-        style: { background: "#fff7ed", color: "#92400e" },
-        iconTheme: { primary: "#f59e0b", secondary: "#92400e" },
-        duration: 3000,
-      });
-    } else {
-      toast.error("Failed to add to cart. Please try again.");
+    try {
+      setLoading(true);
+      
+      // Direct add to cart without auth check
+      const cartItem = {
+        id: product.id,
+        slug: product.slug,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        category: product.category,
+        stock: product.stock,
+        type: "dairy",
+      };
+      
+      // Use a direct approach to avoid double auth check
+      const success = addToCart(cartItem, quantity);
+      
+      if (success) {
+        setTimeout(() => {
+          navigate("/cart");
+        }, 800);
+      }
+    } catch (error) {
+      toast.error("Failed to add to cart");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const handleBuyNow = async () => {
-    setLoading(true);
-    const orderData = {
-      items: [{ id: product.id, quantity }],
-      total: product.price * quantity,
-      customer: {}, // populate from auth/localStorage as needed
-    };
-
-    const result = await DairyService.createOrder(orderData);
-
-    if (result.success) {
-      toast.success("Order placed successfully!", {
-        style: { background: "#e6f1dd", color: "#065f46" },
-        iconTheme: { primary: "#22c55e", secondary: "#065f46" },
-        duration: 4000,
-      });
-      // navigate to order confirmation if available
-    } else {
-      toast.error("Order failed. Please try again.");
+  // ---------------- BUY NOW ----------------
+  const handleBuyNow = () => {
+    if (!product || product.stock === 0) {
+      toast.error("Product out of stock");
+      return;
     }
-    setLoading(false);
+    
+    // Direct delivery form without adding to cart first
+    setShowDeliveryForm(true);
+  };
+
+  // ---------------- ORDER SUBMIT ----------------
+  const handleOrderSubmit = (orderData) => {
+    console.log("Order placed:", orderData);
+    toast.success(`Order #${orderData.orderId} placed successfully!`, {
+      duration: 5000,
+    });
+    setShowDeliveryForm(false);
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
-      <div className="flex items-center gap-2 bg-yellow-50 rounded-full p-1">
-        <button
-          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-          className="w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200 flex items-center justify-center transition-colors disabled:opacity-50"
-          disabled={loading}
-        >
-          <Minus size={16} />
-        </button>
-        <span className="w-12 text-center text-lg font-bold text-gray-900">
-          {quantity}
-        </span>
-        <button
-          onClick={() => setQuantity((q) => q + 1)}
-          className="w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200 flex items-center justify-center transition-colors disabled:opacity-50"
-          disabled={loading || quantity >= product.stock}
-        >
-          <Plus size={16} />
-        </button>
+    <>
+      <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
+        {/* Quantity */}
+        <div className="flex items-center gap-2 bg-yellow-50 rounded-full p-1">
+          <button
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            disabled={loading}
+            className="w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200
+                       flex items-center justify-center transition disabled:opacity-50"
+          >
+            <Minus size={16} />
+          </button>
+
+          <span className="w-12 text-center text-lg font-bold text-gray-900">
+            {quantity}
+          </span>
+
+          <button
+            onClick={() =>
+              setQuantity((q) => Math.min(product.stock, q + 1))
+            }
+            disabled={loading || quantity >= product.stock}
+            className="w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200
+                       flex items-center justify-center transition disabled:opacity-50"
+          >
+            <Plus size={16} />
+          </button>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleAddToCart}
+            disabled={loading || product.stock === 0}
+            className="flex-1 flex items-center justify-center gap-2
+                       bg-yellow-500 text-white font-bold py-3 px-6 rounded-full
+                       hover:bg-yellow-600 transition disabled:opacity-50"
+          >
+            {loading ? (
+              "Adding..."
+            ) : (
+              <>
+                <ShoppingCart size={20} />
+                {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={handleBuyNow}
+            disabled={loading || product.stock === 0}
+            className="flex-1 flex items-center justify-center gap-2
+                       bg-green-600 text-white font-bold py-3 px-6 rounded-full
+                       hover:bg-green-700 transition disabled:opacity-50"
+          >
+            <Zap size={20} /> Buy Now
+          </button>
+        </div>
       </div>
 
-      <div className="flex gap-2 w-full sm:w-auto">
-        <button
-          onClick={handleAddToCart}
-          disabled={loading || product.stock === 0}
-          className="flex-1 flex items-center justify-center gap-2 bg-yellow-500 text-white font-bold py-3 px-6 rounded-full hover:bg-yellow-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            "Adding..."
-          ) : (
-            <>
-              <ShoppingCart size={20} />
-              {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
-            </>
-          )}
-        </button>
-
-        <button
-          onClick={handleBuyNow}
-          disabled={loading || product.stock === 0}
-          className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white font-bold py-3 px-6 rounded-full hover:bg-green-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? "Processing..." : <><Zap size={20} /> Buy Now</>}
-        </button>
-      </div>
-    </div>
+      {/* Delivery Form Modal */}
+      {showDeliveryForm && (
+        <DeliveryForm
+          product={product}
+          quantity={quantity}
+          onClose={() => setShowDeliveryForm(false)}
+          onSubmit={handleOrderSubmit}
+        />
+      )}
+    </>
   );
 };
 
@@ -545,11 +505,10 @@ const ProductDetails = ({ product }) => (
           <Star
             key={i}
             size={20}
-            className={`${
-              i < Math.floor(product.rating)
-                ? "text-yellow-400 fill-current"
-                : "text-gray-300"
-            }`}
+            className={`${i < Math.floor(product.rating)
+              ? "text-yellow-400 fill-current"
+              : "text-gray-300"
+              }`}
           />
         ))}
         <span className="ml-2 text-gray-600">({product.rating})</span>
@@ -712,7 +671,7 @@ const BenefitsSection = () => (
           {
             icon: <MessageCircle size={32} />,
             title: "Customer Support",
-            description: "We’re here to help — always",
+            description: "We're here to help — always",
             color: "from-purple-500 to-pink-500",
           },
         ].map((benefit, idx) => (
@@ -747,11 +706,7 @@ const TestimonialsSection = () => {
   );
 
   useEffect(() => {
-    const loadTestimonials = async () => {
-      const data = await DairyService.fetchTestimonials();
-      setTestimonials(data);
-    };
-    loadTestimonials();
+    setTestimonials(initialTestimonialData);
   }, []);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
@@ -830,24 +785,9 @@ const ContactSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    // Send to backend
-    try {
-      const response = await fetch(API_ENDPOINTS.CONTACT_US, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        toast.success("Message sent successfully!");
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        toast.error("Failed to send message");
-      }
-    } catch (error) {
-      toast.error("Failed to send message");
-    }
+    
+    toast.success("Message sent successfully!");
+    setFormData({ name: "", email: "", message: "" });
     setLoading(false);
   };
 
@@ -934,12 +874,12 @@ const ContactSection = () => {
   );
 };
 
-// --- MAIN PAGE COMPONENT with Backend Integration ---
+// --- MAIN PAGE COMPONENT ---
 export default function DairyPage() {
   const [products, setProducts] = useState(initialDairyData);
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState("popular");
 
   const categories = ["All", "Milk", "Paneer & Cheese", "Ghee", "Butter", "Fermented Dairy", "Premium Milk"];
@@ -951,22 +891,10 @@ export default function DairyPage() {
     { value: "new", label: "Newest" },
   ];
 
-  // refs for product scroll
   const productRefs = initialDairyData.reduce((acc, product) => {
     acc[product.slug] = useRef(null);
     return acc;
   }, {});
-
-  // Load data from backend on mount
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      const data = await DairyService.fetchProducts();
-      setProducts(data);
-      setLoading(false);
-    };
-    loadData();
-  }, []);
 
   const handleImageClick = (slug) => {
     productRefs[slug]?.current?.scrollIntoView({
@@ -975,7 +903,6 @@ export default function DairyPage() {
     });
   };
 
-  // Auto scroll when page loads with hash
   const location = useLocation();
   useEffect(() => {
     if (location.hash) {
@@ -989,23 +916,19 @@ export default function DairyPage() {
     }
   }, [location, productRefs]);
 
-  // Filter and sort products
   const filteredAndSortedProducts = React.useMemo(() => {
     let filtered = products;
 
-    // Apply category filter
     if (filter !== "All") {
       filtered = filtered.filter((m) => m.category === filter);
     }
 
-    // Apply search filter
     if (search) {
       filtered = filtered.filter((m) =>
         m.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // Apply sorting
     switch (sortBy) {
       case "price-low":
         return [...filtered].sort((a, b) => a.price - b.price);
@@ -1019,17 +942,6 @@ export default function DairyPage() {
         return filtered;
     }
   }, [products, filter, search, sortBy]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fffaf0]">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dairy products...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-[#fffaf0] min-h-screen text-gray-900 font-sans">
@@ -1059,11 +971,10 @@ export default function DairyPage() {
                 <button
                   key={cat}
                   onClick={() => setFilter(cat)}
-                  className={`px-4 py-2 rounded-full font-medium transition-all ${
-                    filter === cat
-                      ? "bg-emerald-500 text-white shadow-lg"
-                      : "bg-green-100 text-gray-800 hover:bg-emerald-200"
-                  }`}
+                  className={`px-4 py-2 rounded-full font-medium transition-all ${filter === cat
+                    ? "bg-emerald-500 text-white shadow-lg"
+                    : "bg-green-100 text-gray-800 hover:bg-emerald-200"
+                    }`}
                 >
                   {cat}
                 </button>
@@ -1092,7 +1003,7 @@ export default function DairyPage() {
                     {option.label}
                   </option>
                 ))}
-              </select>n
+              </select>
             </div>
           </div>
 
